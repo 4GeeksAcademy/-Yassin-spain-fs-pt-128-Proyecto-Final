@@ -5,11 +5,14 @@ import os
 from flask import Flask, request, jsonify, url_for, send_from_directory
 from flask_migrate import Migrate
 from flask_swagger import swagger
+from flask_jwt_extended import JWTManager
+from flask_cors import CORS
 from api.utils import APIException, generate_sitemap
 from api.models import db
 from api.routes import api
 from api.admin import setup_admin
 from api.commands import setup_commands
+
 
 # from models import Person
 
@@ -28,8 +31,12 @@ else:
     app.config['SQLALCHEMY_DATABASE_URI'] = "sqlite:////tmp/test.db"
 
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+app.config['JWT_SECRET_KEY'] = os.getenv("JWT_SECRET_KEY", "dev-secret-key")
 MIGRATE = Migrate(app, db, compare_type=True)
 db.init_app(app)
+JWTManager(app)
+# Permitimos peticiones desde el frontend en desarrollo y producción
+CORS(app, supports_credentials=True)
 
 # add the admin
 setup_admin(app)
@@ -41,15 +48,11 @@ setup_commands(app)
 app.register_blueprint(api, url_prefix='/api')
 
 # Handle/serialize errors like a JSON object
-
-
 @app.errorhandler(APIException)
 def handle_invalid_usage(error):
     return jsonify(error.to_dict()), error.status_code
 
 # generate sitemap with all your endpoints
-
-
 @app.route('/')
 def sitemap():
     if ENV == "development":
