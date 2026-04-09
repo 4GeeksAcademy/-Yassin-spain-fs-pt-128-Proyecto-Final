@@ -5,10 +5,18 @@ import {
     createRoutesFromElements,
     Route,
 } from "react-router-dom";
+
+// Importamos el Layout y todas las páginas
 import { Layout } from "./pages/Layout";
 import { Home } from "./pages/Home";
-import { Single } from "./pages/Single";
-import { Demo } from "./pages/Demo";
+import { Login } from "./pages/Login";
+import { Register } from "./pages/Register";
+import { Profile } from "./pages/Profile";
+import { Catalog } from "./pages/Catalog";
+import { ProductDetail } from "./pages/ProductDetail";
+import { Cart } from "./pages/Cart";
+import { Checkout } from "./pages/Checkout";
+import { PaymentSuccess } from "./pages/PaymentSuccess";
 
 export const router = createBrowserRouter(
     createRoutesFromElements(
@@ -22,9 +30,19 @@ export const router = createBrowserRouter(
       <Route path="/" element={<Layout />} errorElement={<h1>Not found!</h1>} >
 
         {/* Nested Routes: Defines sub-routes within the BaseHome component. */}
-        <Route path= "/" element={<Home />} />
-        <Route path="/single/:theId" element={ <Single />} />  {/* Dynamic route for single items */}
-        <Route path="/demo" element={<Demo />} />
+        {/* Rutas publicas accesibles sin iniciar sesion */}
+            <Route path="/" element={<Home />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/register" element={<Register />} />
+            <Route path="/catalog" element={<Catalog />} />
+            <Route path="/products/:id" element={<ProductDetail />} />
+
+            {/* Rutas privadas redirigen a /login si no esta autenticado */}
+            <Route path="/profile" element={<Profile />} />
+            <Route path="/cart" element={<Cart />} />
+            <Route path="/checkout" element={<Checkout />} />
+            <Route path="/payment-success" element={<PaymentSuccess />} />
+            
       </Route>
     )
 );
