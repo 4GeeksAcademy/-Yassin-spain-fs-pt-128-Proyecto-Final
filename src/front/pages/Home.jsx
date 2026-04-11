@@ -17,7 +17,7 @@ export const Home = () => {
 
     return (
         <div>
-            {/* Sección hero principal */}
+            {/* 1. Sección hero principal */}
             <div className="bg-dark text-white text-center py-5">
                 <div className="container py-4">
                     <h1 className="display-4 fw-bold">⚡ GadgetStore</h1>
@@ -30,8 +30,8 @@ export const Home = () => {
                 </div>
             </div>
 
-            {/* Sección de características */}
             <div className="container my-5">
+                {/* 2. Sección de características */}
                 <div className="row text-center g-4">
                     <div className="col-md-4">
                         <div className="card h-100 border-0 shadow-sm p-4">
@@ -56,7 +56,7 @@ export const Home = () => {
                     </div>
                 </div>
 
-                {/* Productos destacados - solo se muestran si hay productos cargados */}
+                {/* 3. Productos destacados - solo se muestran si hay productos cargados */}
                 {store.products.length > 0 && (
                     <div className="mt-5">
                         <h3 className="text-center mb-4">Productos destacados</h3>
