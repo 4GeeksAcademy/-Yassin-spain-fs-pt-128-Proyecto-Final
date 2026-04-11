@@ -32,7 +32,7 @@ export const Navbar = () => {
                     {/* Icono del carrito con badge de cantidad */}
                     <li className="nav-item">
                         <Link className="nav-link position-relative" to="/cart">
-                            🛒 Carrito
+                            🛒 Carrito 
                             {cartCount > 0 && (
                                 <span className="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
                                     {cartCount}
