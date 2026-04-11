@@ -36,7 +36,11 @@ MIGRATE = Migrate(app, db, compare_type=True)
 db.init_app(app)
 JWTManager(app)
 # Permitimos peticiones desde el frontend en desarrollo y producción
-CORS(app, supports_credentials=True)
+CORS(app, supports_credentials=True, origins=[
+    "http://localhost:3000",
+    "http://127.0.0.1:3000",
+    "https://gadgetstore-l6t5.onrender.com"
+])
 
 # add the admin
 setup_admin(app)
