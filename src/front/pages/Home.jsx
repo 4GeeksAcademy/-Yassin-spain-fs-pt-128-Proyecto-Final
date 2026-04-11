@@ -31,34 +31,10 @@ export const Home = () => {
             </div>
 
             <div className="container my-5">
-                {/* 2. Sección de características */}
-                <div className="row text-center g-4">
-                    <div className="col-md-4">
-                        <div className="card h-100 border-0 shadow-sm p-4">
-                            <div style={{ fontSize: "48px" }}>🚀</div>
-                            <h5 className="mt-3">Envío rápido</h5>
-                            <p className="text-muted">Recibe tu pedido en 24-48 horas</p>
-                        </div>
-                    </div>
-                    <div className="col-md-4">
-                        <div className="card h-100 border-0 shadow-sm p-4">
-                            <div style={{ fontSize: "48px" }}>🔒</div>
-                            <h5 className="mt-3">Pago seguro</h5>
-                            <p className="text-muted">Transacciones protegidas con Stripe</p>
-                        </div>
-                    </div>
-                    <div className="col-md-4">
-                        <div className="card h-100 border-0 shadow-sm p-4">
-                            <div style={{ fontSize: "48px" }}>🛡️</div>
-                            <h5 className="mt-3">Garantía incluida</h5>
-                            <p className="text-muted">12 meses de garantía en todos los productos</p>
-                        </div>
-                    </div>
-                </div>
 
-                {/* 3. Productos destacados - solo se muestran si hay productos cargados */}
+                {/* 2. Productos destacados - solo se muestran si hay productos cargados */}
                 {store.products.length > 0 && (
-                    <div className="mt-5">
+                    <div className="mb-5">
                         <h3 className="text-center mb-4">Productos destacados</h3>
                         <div className="row">
                             {/* Mostramos solo los primeros 3 productos */}
@@ -88,6 +64,32 @@ export const Home = () => {
                         </div>
                     </div>
                 )}
+
+                {/* 3. Sección de características */}
+                <div className="row text-center g-4">
+                    <div className="col-md-4">
+                        <div className="card h-100 border-0 shadow-sm p-4">
+                            <div style={{ fontSize: "48px" }}>🚀</div>
+                            <h5 className="mt-3">Envío rápido</h5>
+                            <p className="text-muted">Recibe tu pedido en 24-48 horas</p>
+                        </div>
+                    </div>
+                    <div className="col-md-4">
+                        <div className="card h-100 border-0 shadow-sm p-4">
+                            <div style={{ fontSize: "48px" }}>🔒</div>
+                            <h5 className="mt-3">Pago seguro</h5>
+                            <p className="text-muted">Transacciones protegidas con Stripe</p>
+                        </div>
+                    </div>
+                    <div className="col-md-4">
+                        <div className="card h-100 border-0 shadow-sm p-4">
+                            <div style={{ fontSize: "48px" }}>🛡️</div>
+                            <h5 className="mt-3">Garantía incluida</h5>
+                            <p className="text-muted">12 meses de garantía en todos los productos</p>
+                        </div>
+                    </div>
+                </div>
+
             </div>
         </div>
     );
