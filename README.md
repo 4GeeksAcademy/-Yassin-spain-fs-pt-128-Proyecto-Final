@@ -1,81 +1,384 @@
-# WebApp boilerplate with React JS and Flask API
+# Yassine Bouzagaoui Errajy - ⚡ GadgetStore — Proyecto Final 4Geeks Academy
 
-Build web applications using React.js for the front end and python/flask for your backend API.
+E-commerce de tecnología y gadgets desarrollado como proyecto final del bootcamp Full Stack de 4Geeks Academy (España, promoción fs-pt-128).
 
-- Documentation can be found here: https://4geeks.com/docs/start/react-flask-template
-- Here is a video on [how to use this template](https://www.loom.com/share/f37c6838b3f1496c95111e515e83dd9b)
-- Integrated with Pipenv for package managing.
-- Fast deployment to Render [in just a few steps here](https://4geeks.com/docs/start/deploy-to-render-com).
-- Use of .env file.
-- SQLAlchemy integration for database abstraction.
+## 🚀 Demo en producción
 
-### 1) Installation:
+- **Frontend:** [https://gadgetstore-l6t5.onrender.com](https://gadgetstore-l6t5.onrender.com)
+- **Backend API:** [https://gadgetstore-api-a4lr.onrender.com](https://gadgetstore-api-a4lr.onrender.com)
+- **Repositorio:** [https://github.com/4GeeksAcademy/-Yassin-spain-fs-pt-128-Proyecto-Final](https://github.com/4GeeksAcademy/-Yassin-spain-fs-pt-128-Proyecto-Final)
 
-> If you use Github Codespaces (recommended) or Gitpod this template will already come with Python, Node and the Posgres Database installed. If you are working locally make sure to install Python 3.10, Node 
+> ⚠️ El backend usa el plan gratuito de Render. Si tarda en responder, espera 30-60 segundos — el servidor se duerme tras 15 minutos de inactividad.
 
-It is recomended to install the backend first, make sure you have Python 3.10, Pipenv and a database engine (Posgress recomended)
+---
 
-1. Install the python packages: `$ pipenv install`
-2. Create a .env file based on the .env.example: `$ cp .env.example .env`
-3. Install your database engine and create your database, depending on your database you have to create a DATABASE_URL variable with one of the possible values, make sure you replace the valudes with your database information:
+## 📋  Descripción
 
-| Engine    | DATABASE_URL                                        |
-| --------- | --------------------------------------------------- |
-| SQLite    | sqlite:////test.db                                  |
-| MySQL     | mysql://username:password@localhost:port/example    |
-| Postgress | postgres://username:password@localhost:5432/example |
+GadgetStore es una aplicación web de e-commerce completa que permite a los usuarios explorar un catálogo de productos tecnológicos, gestionar su carrito de compras y realizar pagos de forma segura a través de Stripe.
 
-4. Migrate the migrations: `$ pipenv run migrate` (skip if you have not made changes to the models on the `./src/api/models.py`)
-5. Run the migrations: `$ pipenv run upgrade`
-6. Run the application: `$ pipenv run start`
+---
 
-> Note: Codespaces users can connect to psql by typing: `psql -h localhost -U gitpod example`
+## ✅ Requisitos del proyecto cubiertos
 
-### Undo a migration
+- Registro y Login con validaciones en frontend y backend
+- Vista de perfil de usuario con edición de datos y eliminación de cuenta
+- Vista de catálogo de productos
+- Vista de detalle de producto
+- Vista de carrito conectada al backend y almacenada en base de datos
+- Integración con pasarela de pago (Stripe)
+- CRUD completo de productos a través de la API
+- Datos almacenados en base de datos PostgreSQL (producción) / SQLite (desarrollo)
+- Despliegue en Render
+- Múltiples commits con mensajes descriptivos
 
-You are also able to undo a migration by running
+---
 
-```sh
-$ pipenv run downgrade
+## 🛠️ Tecnologías utilizadas
+
+### Backend
+- **Python 3.13** con **Flask**
+- **SQLAlchemy** — ORM para la base de datos
+- **Flask-Migrate** — Migraciones de base de datos
+- **Flask-JWT-Extended** — Autenticación con tokens JWT
+- **Flask-CORS** — Manejo de CORS entre frontend y backend
+- **Werkzeug** — Hash de contraseñas
+- **Stripe** — Pasarela de pago
+- **SQLite** (desarrollo) / **PostgreSQL** (producción)
+- **Gunicorn** — Servidor WSGI para producción
+
+### Frontend
+- **React 18** con **Vite**
+- **React Router DOM v6** — Navegación entre páginas
+- **useReducer + Context API** — Gestión de estado global
+- **Bootstrap 5** — Estilos y componentes UI
+- **Stripe.js + React Stripe.js** — Integración del formulario de pago
+
+### Despliegue
+- **Render** — Backend (Web Service) + Frontend (Static Site) + Base de datos (PostgreSQL)
+- **GitHub** — Control de versiones con integración continua
+
+---
+
+## 🗄️ Modelos de base de datos
+
+```
+User
+├── id (PK)
+├── email (único)
+├── password (hasheado)
+├── full_name
+├── phone
+├── address
+└── is_active
+
+Product
+├── id (PK)
+├── name
+├── description
+├── price
+├── stock
+├── image_url
+├── category
+└── is_active
+
+CartItem
+├── id (PK)
+├── user_id (FK → User)
+├── product_id (FK → Product)
+└── quantity
 ```
 
-### Backend Populate Table Users
+---
 
-To insert test users in the database execute the following command:
+## 📡 Endpoints de la API
 
-```sh
-$ flask insert-test-users 5
+### Autenticación
+| Método | Endpoint | Descripción |
+|--------|----------|-------------|
+| POST | /api/register | Registro de nuevo usuario |
+| POST | /api/login | Inicio de sesión |
+
+### Usuario
+| Método | Endpoint | Descripción | Auth |
+|--------|----------|-------------|------|
+| GET | /api/user/profile | Obtener perfil | ✅ |
+| PUT | /api/user/profile | Editar perfil | ✅ |
+| DELETE | /api/user/profile | Eliminar cuenta | ✅ |
+
+### Productos (CRUD completo)
+| Método | Endpoint | Descripción | Auth |
+|--------|----------|-------------|------|
+| GET | /api/products | Listar productos | ❌ |
+| GET | /api/products/:id | Detalle de producto | ❌ |
+| POST | /api/products | Crear producto | ✅ |
+| PUT | /api/products/:id | Editar producto | ✅ |
+| DELETE | /api/products/:id | Eliminar producto | ✅ |
+
+### Carrito
+| Método | Endpoint | Descripción | Auth |
+|--------|----------|-------------|------|
+| GET | /api/cart | Ver carrito | ✅ |
+| POST | /api/cart | Agregar item | ✅ |
+| PUT | /api/cart/:id | Actualizar cantidad | ✅ |
+| DELETE | /api/cart/:id | Eliminar item | ✅ |
+| DELETE | /api/cart | Vaciar carrito | ✅ |
+
+### Pagos
+| Método | Endpoint | Descripción | Auth |
+|--------|----------|-------------|------|
+| POST | /api/create-payment-intent | Crear intención de pago | ✅ |
+| POST | /api/payment-success | Confirmar pago exitoso | ✅ |
+
+---
+
+## 📁 Estructura del proyecto
+
+```
+Yassin-spain-fs-pt-128-Proyecto-Final/
+├── src/
+│   ├── api/
+│   │   ├── __init__.py
+│   │   ├── admin.py
+│   │   ├── commands.py
+│   │   ├── models.py        ← Modelos SQLAlchemy
+│   │   ├── routes.py        ← Todos los endpoints
+│   │   └── utils.py
+│   ├── front/
+│   │   ├── components/
+│   │   │   ├── CheckoutForm.jsx
+│   │   │   ├── Navbar.jsx
+│   │   │   ├── Footer.jsx
+│   │   │   └── ScrollToTop.jsx
+│   │   ├── hooks/
+│   │   │   └── useGlobalReducer.jsx   ← Store global con useReducer
+│   │   ├── pages/
+│   │   │   ├── Home.jsx
+│   │   │   ├── Login.jsx
+│   │   │   ├── Register.jsx
+│   │   │   ├── Profile.jsx
+│   │   │   ├── Catalog.jsx
+│   │   │   ├── ProductDetail.jsx
+│   │   │   ├── Cart.jsx
+│   │   │   ├── Checkout.jsx
+│   │   │   └── PaymentSuccess.jsx
+│   │   ├── routes.jsx
+│   │   └── store.js         ← Estado global (token, user, products, cart)
+│   ├── app.py               ← Configuración Flask
+│   └── wsgi.py
+├── migrations/
+├── public/
+│   └── _redirects           ← Configuración de rutas para Render
+├── .env                     ← Variables de entorno
+├── .env.example
+├── index.html               ← Título y favicon de la app
+├── Pipfile
+├── package.json
+└── requirements.txt
 ```
 
-And you will see the following message:
+---
 
+## ⚙️ Instalación y configuración local
+
+### Requisitos previos
+- Python 3.13+
+- Node.js 16+
+- pipenv (`pip install pipenv`)
+
+### 1. Clonar el repositorio
+```bash
+git clone https://github.com/4GeeksAcademy/-Yassin-spain-fs-pt-128-Proyecto-Final
+cd -Yassin-spain-fs-pt-128-Proyecto-Final
 ```
-  Creating test users
-  test_user1@test.com created.
-  test_user2@test.com created.
-  test_user3@test.com created.
-  test_user4@test.com created.
-  test_user5@test.com created.
-  Users created successfully!
+
+### 2. Configurar variables de entorno
+```bash
+cp .env.example .env
 ```
 
-### **Important note for the database and the data inside it**
+Contenido del `.env`:
+```
+FLASK_APP=src/app.py
+FLASK_DEBUG=1
+DATABASE_URL=sqlite:////tmp/test.db
+JWT_SECRET_KEY=tu-clave-secreta
+STRIPE_SECRET_KEY=sk_test_...
+VITE_BACKEND_URL=http://localhost:3001
+VITE_STRIPE_PUBLISHABLE_KEY=pk_test_...
+VITE_BASENAME=/
+```
 
-Every Github codespace environment will have **its own database**, so if you're working with more people eveyone will have a different database and different records inside it. This data **will be lost**, so don't spend too much time manually creating records for testing, instead, you can automate adding records to your database by editing ```commands.py``` file inside ```/src/api``` folder. Edit line 32 function ```insert_test_data``` to insert the data according to your model (use the function ```insert_test_users``` above as an example). Then, all you need to do is run ```pipenv run insert-test-data```.
+### 3. Instalar dependencias del backend
+```bash
+pipenv install
+```
 
-### Front-End Manual Installation:
+### 4. Instalar dependencias del frontend
+```bash
+npm install
+```
 
--   Make sure you are using node version 20 and that you have already successfully installed and runned the backend.
+### 5. Crear la base de datos
+```bash
+# Windows (PowerShell)
+$env:FLASK_APP="src/app.py"; pipenv run flask db upgrade
 
-1. Install the packages: `$ npm install`
-2. Start coding! start the webpack dev server `$ npm run start`
+# Mac/Linux
+pipenv run flask db upgrade
+```
 
-## Publish your website!
+### 6. Arrancar los servidores
 
-This boilerplate it's 100% read to deploy with Render.com and Heroku in a matter of minutes. Please read the [official documentation about it](https://4geeks.com/docs/start/deploy-to-render-com).
+**Terminal 1 — Backend:**
+```bash
+# Windows (PowerShell)
+$env:FLASK_APP="src/app.py"; $env:FLASK_DEBUG="1"; pipenv run flask run --host=0.0.0.0 --port=3001
 
-### Contributors
+# Mac/Linux
+pipenv run flask run --host=0.0.0.0 --port=3001
+```
 
-This template was built as part of the 4Geeks Academy [Coding Bootcamp](https://4geeksacademy.com/us/coding-bootcamp) by [Alejandro Sanchez](https://twitter.com/alesanchezr) and many other contributors. Find out more about our [Full Stack Developer Course](https://4geeksacademy.com/us/coding-bootcamps/part-time-full-stack-developer), and [Data Science Bootcamp](https://4geeksacademy.com/us/coding-bootcamps/datascience-machine-learning).
+**Terminal 2 — Frontend:**
+```bash
+npm run start
+```
 
-You can find other templates and resources like this at the [school github page](https://github.com/4geeksacademy/).
+Abre `http://localhost:3000` en el navegador.
+
+---
+
+## 🚀 Despliegue en Render
+
+### 1. Base de datos PostgreSQL
+- New → PostgreSQL → Free plan → Copiar **Internal Database URL**
+
+### 2. Backend (Web Service)
+| Campo | Valor |
+|-------|-------|
+| Environment | Python |
+| Build Command | `pip install -r requirements.txt && flask db upgrade` |
+| Start Command | `gunicorn --chdir src wsgi:application` |
+| Region | Oregon (US West) |
+
+Variables de entorno:
+```
+DATABASE_URL=<Internal Database URL de Render>
+JWT_SECRET_KEY=<clave segura>
+FLASK_APP=src/app.py
+STRIPE_SECRET_KEY=sk_test_...
+```
+
+### 3. Frontend (Static Site)
+| Campo | Valor |
+|-------|-------|
+| Build Command | `npm install && npm run build` |
+| Publish Directory | `dist` |
+| Region | Oregon (US West) |
+
+Variables de entorno:
+```
+VITE_BACKEND_URL=
+VITE_STRIPE_PUBLISHABLE_KEY=pk_test_...
+VITE_BASENAME=/
+```
+
+### 4. Configurar Redirects en el Static Site
+Render → Static Site → Settings → Redirect and Rewrite Rules:
+
+| Source | Destination | Action |
+|--------|-------------|--------|
+| `/*` | `/index.html` | Rewrite |
+
+---
+
+## 🧪 Tarjetas de prueba de Stripe
+
+| Escenario | Número | Fecha | CVC |
+|-----------|--------|-------|-----|
+| ✅ Pago exitoso | 4242 4242 4242 4242 | Cualquier fecha futura | Cualquier 3 dígitos |
+| ❌ Pago rechazado | 4000 0000 0000 0002 | Cualquier fecha futura | Cualquier 3 dígitos |
+
+---
+
+## 🐛 Problemas encontrados y soluciones
+
+### 1. Flask no encontraba la aplicación en Windows
+**Error:** `Could not locate a Flask application`
+
+**Causa:** En Windows las variables de entorno del `.env` no se cargan automáticamente.
+
+**Solución:**
+```powershell
+$env:FLASK_APP="src/app.py"; $env:FLASK_DEBUG="1"; pipenv run flask run --host=0.0.0.0 --port=3001
+```
+
+---
+
+### 2. Error CORS bloqueando las peticiones del frontend
+**Error:** `has been blocked by CORS policy`
+
+**Causa:** El `CORS(api)` en el blueprint de rutas entraba en conflicto con la configuración global.
+
+**Solución:** Eliminar `CORS(api)` del `routes.py` y configurar en `app.py`:
+```python
+CORS(app, supports_credentials=True)
+```
+
+---
+
+### 3. Gunicorn no encontraba el módulo `wsgi` en Render
+**Error:** `ModuleNotFoundError: No module named 'wsgi'`
+
+**Causa:** El `wsgi.py` estaba dentro de `src/` y el comando de inicio no especificaba la ruta.
+
+**Solución:** Actualizar el Start Command en Render:
+```
+gunicorn --chdir src wsgi:application
+```
+Y corregir el `wsgi.py`:
+```python
+import sys
+import os
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), 'src'))
+from app import app as application
+```
+
+---
+
+### 4. Rutas de React devolvían "Not Found" en producción
+**Causa:** Render no redirigía las rutas de React Router a `index.html`.
+
+**Solución:** Crear `public/_redirects`:
+```
+/* /index.html 200
+```
+Y configurar en Render → Redirect and Rewrite Rules: `/*` → `/index.html` → Rewrite.
+
+---
+
+### 5. Total del carrito mostraba $0.00 en checkout
+**Causa:** El `STRIPE_SECRET_KEY` tenía el valor literal `sk_test_...` en vez de la clave real de Stripe.
+
+**Solución:** Crear cuenta en [stripe.com](https://stripe.com), obtener las claves reales y configurarlas en Render.
+
+---
+
+### 6. Stripe bloqueado por el bloqueador de anuncios
+**Error:** `POST https://r.stripe.com/b net::ERR_BLOCKED_BY_CLIENT`
+
+**Causa:** Los bloqueadores de anuncios bloquean las peticiones de Stripe en el navegador.
+
+**Solución:** Desactivar el bloqueador para `localhost` o usar el navegador en modo incógnito sin extensiones.
+
+---
+
+## 👤 Autor
+
+**Yassin Bouzagaoui Errajy**
+Full Stack Development — 4Geeks Academy España (fs-pt-128)
+
+---
+
+## 📄 Licencia
+
+Este proyecto fue desarrollado con fines educativos como proyecto final de certificación de 4Geeks Academy.
