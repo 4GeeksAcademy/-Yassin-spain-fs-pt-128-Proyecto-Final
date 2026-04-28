@@ -221,6 +221,8 @@ def add_to_cart():
     if product.stock < 1:
         return jsonify({"error": "Producto sin stock"}), 400
 
+    quantity = data.get("quantity", 1)
+
     # Si el producto ya está en el carrito sumamos la cantidad
     existing = CartItem.query.filter_by(
         user_id=user_id,
@@ -228,15 +230,23 @@ def add_to_cart():
     ).first()
 
     if existing:
-        existing.quantity += data.get("quantity", 1)
+        # Validamos que la cantidad total no supere el stock disponible
+        nueva_cantidad = existing.quantity + quantity
+        if nueva_cantidad > product.stock:
+            return jsonify({"error": f"Solo hay {product.stock} unidades disponibles"}), 400
+        existing.quantity = nueva_cantidad
         db.session.commit()
         return jsonify(existing.serialize()), 200
+
+    # Validamos que la cantidad inicial no supere el stock
+    if quantity > product.stock:
+        return jsonify({"error": f"Solo hay {product.stock} unidades disponibles"}), 400
 
     # Si no existe lo creamos
     item = CartItem(
         user_id=user_id,
         product_id=data["product_id"],
-        quantity=data.get("quantity", 1)
+        quantity=quantity
     )
     db.session.add(item)
     db.session.commit()
@@ -315,7 +325,16 @@ def create_payment_intent():
 @jwt_required()
 def payment_success():
     user_id = get_jwt_identity()
-    # Vaciamos el carrito después del pago exitoso
+    items = CartItem.query.filter_by(user_id=user_id).all()
+
+    # Reducimos el stock de cada producto comprado
+    for item in items:
+        product = Product.query.get(item.product_id)
+        if product:
+            product.stock = max(0, product.stock - item.quantity)
+
+    # Vaciamos el carrito después del pago
     CartItem.query.filter_by(user_id=user_id).delete()
     db.session.commit()
-    return jsonify({"message": "Pago exitoso, carrito vaciado"}), 200
+
+    return jsonify({"message": "Pago exitoso, stock actualizado"}), 200
